@@ -1,4 +1,5 @@
 # https://www.matiji.net/exam/brushquestion/18/3846/4C6668FEB8CFD6520DE73B365B31D1A4
+# 避高精
 def feibo(num):
     x1 = 1
     x2 = 0
