@@ -1,5 +1,8 @@
 // https://www.matiji.net/exam/brushquestion/25/3181/1DC60EA6DF83A333301CFFE1407FBA59
 
+//计时器骗分大法
+//正解是可达性搜索
+
 #include <iostream>
 using namespace std;
 
@@ -15,4 +18,3 @@ int main(){
     }
     cout << "No";
 }
-//计时器骗分大法
