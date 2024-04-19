@@ -35,7 +35,7 @@ signed main(){
                             )
                         )
                     );
-        dp[i][R] =  x[i]+h[i] >= x[i+1]?(
+        dp[i][R] = (x[i]+h[i] >= x[i+1])?(
                         0
                     ):(
                         dp[i][N] + 1 
