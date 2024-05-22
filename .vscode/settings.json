@@ -4,6 +4,16 @@
         "xstring": "cpp",
         "list": "cpp",
         "stack": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "sstream": "c",
+        "bitset": "c",
+        "deque": "c",
+        "initializer_list": "c",
+        "queue": "c",
+        "type_traits": "c",
+        "vector": "c",
+        "xhash": "c",
+        "xtree": "c",
+        "set": "cpp"
     }
 }
