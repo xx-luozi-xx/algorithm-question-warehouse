@@ -197,8 +197,6 @@ Word::format(){
             type_ = SEPARATOR;
         }else{
             throw Exception::LEXICAL_ERROR;
-            while(1);
-            assert(0);
         }
     }else if(buffer_type_ == BF_NUMBER){
         type_ = NUMBER;
