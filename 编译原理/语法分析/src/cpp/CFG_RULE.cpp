@@ -183,7 +183,7 @@ SyntaxNodeBase* CFG_procedureDeclare(std::list<Word>::const_iterator& itr, std::
 
 SyntaxNodeBase* CFG_sentence(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
 // <语句> → <赋值语句>|<条件语句>|<当型循环语句>|<过程调用语句>|<读语句>|<写语句>|<复合语句>|<空语句>
-    VariableSyntaxNode* sentenceNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::PROCEDUREDECLARE);
+    VariableSyntaxNode* sentenceNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::SENTENCE);
     
     auto itr_next = itr;
     if(itr_next != itr_end){
@@ -422,6 +422,319 @@ SyntaxNodeBase* CFG_callSentence(std::list<Word>::const_iterator& itr, std::list
     } 
 
     return callSentenceNode;    
+}
+
+SyntaxNodeBase* CFG_readSentence(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+//<读语句> → READ(<标识符>{ ,<标识符>})
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::READSENTENCE);
+
+    //READ
+    if(itr != itr_end and itr->value()=="READ"){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    //(
+    if(itr != itr_end and itr->value()=="("){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }    
+    
+    // <标识符>
+    if(itr != itr_end and itr->type()==CP::Word::Type::IDENTIFIER){
+        SyntaxNodeBase* identifierTerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(identifierTerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    } 
+
+    //{ ,<标识符>}
+    while(itr != itr_end and itr->value()==","){
+        //,
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+
+        // <标识符>
+        if(itr != itr_end and itr->type()==CP::Word::Type::IDENTIFIER){
+            SyntaxNodeBase* identifierTerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+            itr ++;
+            thisNode->addChilds(identifierTerminalNode);
+        }else{
+            throw CP::Exception::SYNTAX_ERROR;
+        } 
+    }
+
+    //)
+    if(itr != itr_end and itr->value()==")"){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    return thisNode;        
+}
+
+SyntaxNodeBase* CFG_writeSentence(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+//<写语句> → WRITE(<标识符>{,<标识符>})
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::WRITESENTENCE);
+
+    //WRITE
+    if(itr != itr_end and itr->value()=="WRITE"){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    //(
+    if(itr != itr_end and itr->value()=="("){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }    
+    
+    // <标识符>
+    if(itr != itr_end and itr->type()==CP::Word::Type::IDENTIFIER){
+        SyntaxNodeBase* identifierTerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(identifierTerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    } 
+
+    //{ ,<标识符>}
+    while(itr != itr_end and itr->value()==","){
+        //,
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+
+        // <标识符>
+        if(itr != itr_end and itr->type()==CP::Word::Type::IDENTIFIER){
+            SyntaxNodeBase* identifierTerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+            itr ++;
+            thisNode->addChilds(identifierTerminalNode);
+        }else{
+            throw CP::Exception::SYNTAX_ERROR;
+        } 
+    }
+
+    //)
+    if(itr != itr_end and itr->value()==")"){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    return thisNode;       
+}
+
+SyntaxNodeBase* CFG_combined(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+//<复合语句> → BEGIN<语句>{ ;<语句>} END
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::COMBINED);
+
+    //BEGIN
+    if(itr != itr_end and itr->value()=="BEGIN"){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    //<语句>
+    SyntaxNodeBase* sentenceNode = CFG_sentence(itr, itr_end);
+    thisNode->addChilds(sentenceNode);
+
+    //{ ;<语句>}
+    while(itr != itr_end and itr->value()==";"){
+        //;
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+
+        // <语句>
+        SyntaxNodeBase* sentenceNode = CFG_sentence(itr, itr_end);
+        thisNode->addChilds(sentenceNode);
+    }
+
+    //END
+    if(itr != itr_end and itr->value()=="END"){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    return thisNode;      
+}
+
+SyntaxNodeBase* CFG_empty(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+//<空语句> → epsilon
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::EMPTY);
+    return thisNode;
+}
+
+SyntaxNodeBase* CFG_experession(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+// <表达式> → [+|-]<项>{<加减运算符><项>}
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::EXPRESSION);
+
+    //[+|-]
+    if(itr != itr_end and (itr->value() == "+" or itr->value() == "-")){
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }
+
+    // <项>
+    SyntaxNodeBase* itemNode = CFG_item(itr, itr_end);
+    thisNode->addChilds(itemNode);   
+
+    //{
+    // +|- 
+    // <项>
+    //}
+    while(itr != itr_end and (itr->value() == "+" or itr->value() == "-")){
+        //+|-
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+
+        // <项>
+        SyntaxNodeBase* itemNode = CFG_item(itr, itr_end);
+        thisNode->addChilds(itemNode);   
+    }
+
+    return thisNode;
+}
+
+
+SyntaxNodeBase* CFG_condition(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+// <条件> → <表达式><关系运算符><表达式>|ODD<表达式>
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::CONDITION);
+
+    //ODD<表达式>
+    if(itr != itr_end and itr->value() == "ODD"){
+        //ODD
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+
+        //<表达式>
+        SyntaxNodeBase* experessionNode = CFG_experession(itr, itr_end);
+        thisNode->addChilds(experessionNode);   
+    }else{
+        //<表达式><关系运算符><表达式>
+        
+        //<表达式>
+        SyntaxNodeBase* experessionNode = CFG_experession(itr, itr_end);
+        thisNode->addChilds(experessionNode);   
+
+        //<关系运算符>→ =|#|<|<=|>|>=
+        if(itr != itr_end and (itr->value() == "=" 
+                or itr->value() == "#"
+                or itr->value() == "<"
+                or itr->value() == "<="
+                or itr->value() == ">"
+                or itr->value() == ">="
+        )){
+            SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+            itr ++;
+            thisNode->addChilds(TerminalNode);
+        }else{
+            throw CP::Exception::SYNTAX_ERROR;
+        }
+
+        //<表达式>
+        experessionNode = CFG_experession(itr, itr_end);
+        thisNode->addChilds(experessionNode);  
+    }
+
+    return thisNode;
+}
+
+SyntaxNodeBase* CFG_item(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+//<项> → <因子>{<乘除运算符><因子>}
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::ITEM);
+
+    // <因子>
+    SyntaxNodeBase* factorNode = CFG_factor(itr, itr_end);
+    thisNode->addChilds(factorNode);  
+
+    //{<乘除运算符><因子>}
+    while(itr != itr_end and (itr->value() == "*" or itr->value() == "/")){
+        //*|/
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+
+        // <因子>
+        SyntaxNodeBase* factorNode = CFG_factor(itr, itr_end);
+        thisNode->addChilds(factorNode);  
+    }
+
+    return thisNode;
+}
+
+SyntaxNodeBase* CFG_factor(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end){
+//<因子> → <标识符>|<无符号整数>|(<表达式>)
+    VariableSyntaxNode* thisNode = new VariableSyntaxNode(CP::VariableSyntaxNode::Type::FACTOR);
+    
+    //<标识符>|<无符号整数>|(<表达式>)
+    if(itr != itr_end and itr->type() == CP::Word::Type::IDENTIFIER){
+        //<标识符>
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else if(itr != itr_end and itr->type() == CP::Word::Type::NUMBER){
+        //<无符号整数>
+        SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+        itr ++;
+        thisNode->addChilds(TerminalNode);
+    }else if(itr != itr_end and itr->value() == "("){
+        //(<表达式>)
+        //(
+        if(itr != itr_end and itr->value()=="("){
+            SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+            itr ++;
+            thisNode->addChilds(TerminalNode);
+        }else{
+            throw CP::Exception::SYNTAX_ERROR;
+        }    
+        
+        // <表达式>
+        SyntaxNodeBase* experessionNode = CFG_experession(itr, itr_end);
+        thisNode->addChilds(experessionNode);  
+
+        //)
+        if(itr != itr_end and itr->value()==")"){
+            SyntaxNodeBase* TerminalNode = new TerminalSyntaxNode(itr->type(), itr->value());
+            itr ++;
+            thisNode->addChilds(TerminalNode);
+        }else{
+            throw CP::Exception::SYNTAX_ERROR;
+        }        
+    }else{
+        throw CP::Exception::SYNTAX_ERROR;
+    }
+
+    return thisNode;
 }
 
 

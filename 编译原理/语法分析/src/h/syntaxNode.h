@@ -37,13 +37,22 @@ public:
         IFSENTENCE,
         WHILESENTENCE,
         CALLSENTENCE,
-        
+        READSENTENCE,
+        WRITESENTENCE,
+        COMBINED,
+        EMPTY,
+        EXPRESSION,
+        CONDITION,
+        ITEM,
+        FACTOR,
+
     };
     static std::string typeToString(VariableSyntaxNode::Type syntaxNodetype);
 
 public:
     VariableSyntaxNode(CP::VariableSyntaxNode::Type syntaxNodeType);
     void addChilds(SyntaxNodeBase* child);
+    const std::list<SyntaxNodeBase*>& childs() const;
 
     virtual std::string info()const override;
 

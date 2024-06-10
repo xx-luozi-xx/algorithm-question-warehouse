@@ -43,23 +43,29 @@ SyntaxNodeBase* CFG_whileSentence(std::list<Word>::const_iterator& itr, std::lis
 //<过程调用语句> → CALL<标识符>
 SyntaxNodeBase* CFG_callSentence(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
-//<读语句>
+//<读语句> → READ(<标识符>{ ,<标识符>})
 SyntaxNodeBase* CFG_readSentence(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
-//<写语句>
+//<写语句> → WRITE(<标识符>{,<标识符>})
 SyntaxNodeBase* CFG_writeSentence(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
-//<复合语句>
+//<复合语句> → BEGIN<语句>{ ;<语句>} END
 SyntaxNodeBase* CFG_combined(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
-//<空语句>
+//<空语句> → epsilon
 SyntaxNodeBase* CFG_empty(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
 // <表达式> → [+|-]<项>{<加减运算符><项>}
 SyntaxNodeBase* CFG_experession(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
-// <条件>
+// <条件> → <表达式><关系运算符><表达式>|ODD<表达式>
 SyntaxNodeBase* CFG_condition(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
+
+//<项> → <因子>{<乘除运算符><因子>}
+SyntaxNodeBase* CFG_item(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
+
+//<因子> → <标识符>|<无符号整数>|(<表达式>)
+SyntaxNodeBase* CFG_factor(std::list<Word>::const_iterator& itr, std::list<Word>::const_iterator itr_end);
 
 
 }//namespace
