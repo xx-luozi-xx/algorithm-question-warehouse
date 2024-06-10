@@ -37,7 +37,7 @@ CC= g++
 # 编译器标志
 
 CFLAGS = -MMD -MP -c -Wall -O2 -I$(H_DIR) 
-LDFLAGS = -Wall 
+LDFLAGS = -Wall -lstdc++
 
 # 可执行文件名称
 TARGET_SRC = $(wildcard $(SRC_DIR)/main/*.cpp)

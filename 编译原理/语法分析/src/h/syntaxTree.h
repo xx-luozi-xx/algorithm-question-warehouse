@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "SyntaxNode.h"
+#include "syntaxNode.h"
 
 namespace CP{
 
