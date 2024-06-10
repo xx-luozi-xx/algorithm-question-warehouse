@@ -16,10 +16,8 @@ int main(){
         list<Word> words;
         while(!artical.read_end()){
             Word word = artical.read_word();
-            words.push_back(word);
-        }
-        for(Word& word: words){
             word.format();
+            words.push_back(word);
         }
 
         //Syntax Analysis
