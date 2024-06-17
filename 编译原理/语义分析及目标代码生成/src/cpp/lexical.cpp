@@ -1,97 +1,16 @@
 #include <iostream>
-#include <list>
-#include <string>
-#include <set>
 
-#include <assert.h>
+#include "setting.h"
+#include "lexical.h"
+#include "CP_Exception.h"
+
 using namespace std;
-
-#define DEBUG_
-#define LOCAL
-
-
-namespace CP{
-
-class Artical;
-class Word;
-
-enum Exception{
-    LEXICAL_ERROR,
-};
-
-class Artical{
-public:
-    Artical(istream& in);
-
-    bool read_end()const;
-    Word read_word();
-
-protected:
-    string data_;
-    string::iterator read_ptr_;
-};
-
-class Word{
-friend Artical;
-
-public:
-    enum Type{
-        BF_NUMBER, BF_STRING, BF_SYMBOL, 
-        KEYWORDS, IDENTIFIER, NUMBER, OPERATOR, SEPARATOR, 
-        ERROR,
-    };
-    
-public:
-    void format();
-    string print_info() const;
-    
-public:
-    static set<string> keywords_set;
-    static set<string> operator_set;
-    static set<string> separator_set;
-
-    static set<string> symbol_alpha_set;
-    static set<string> alphabet_alpha_set;
-    static set<string> number_alpha_set;
-    static set<string> space_alpha_set;
-
-    static bool is_usable_alpha(char c);
-protected:
-
-    string      data_;
-    Type        buffer_type_;
-    Type        type_;
-    size_t      location_;
-};
-
-}//namespace 
-
-int main(){
-    using namespace CP;
-    try{
-        Artical artical(cin);
-        list<Word> words;
-        while(!artical.read_end()){
-            Word word = artical.read_word();
-            words.push_back(word);
-        }
-        for(Word& word: words){
-                word.format();
-        }
-        for(Word& word: words){
-            cout << word.print_info() << '\n';
-        }
-    }catch(CP::Exception){
-        cout << "Lexical Error";
-    }
-    return 0;
-}
 
 namespace CP{
 
 Artical::Artical(istream& in){
     char input;
-    while(input=cin.get()
+    while(input=in.get()
                 #ifdef LOCAL
                     , input != '!'
                 #else
@@ -339,7 +258,13 @@ set<string> Word::space_alpha_set = {
 
 
 
+CP::Word::Type Word::type() const{
+    return type_;
+}
 
+string Word::value() const{
+    return data_;
+}
 
 
 
@@ -347,3 +272,4 @@ set<string> Word::space_alpha_set = {
 
 
 }//namespace
+
