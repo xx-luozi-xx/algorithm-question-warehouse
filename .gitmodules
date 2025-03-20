@@ -1,0 +1,3 @@
+[submodule "sui_feng"]
+	path = sui_feng
+	url = https://github.com/sui-feng-cb/Codeforces_questions.git
